@@ -44,7 +44,7 @@ var EventSource = function (url) {
       if (lastEventId != null) xhr.setRequestHeader('Last-Event-ID', lastEventId);
       cache = '';
 
-      xhr.timeout = 50000;
+      xhr.timeout = 0;
       xhr.onreadystatechange = function () {
         if (this.readyState == 3 || (this.readyState == 4 && this.status == 200)) {
           // on success
@@ -112,9 +112,11 @@ var EventSource = function (url) {
 
       xhr.send();
 
-      setTimeout(function () {
-        if (true || xhr.readyState == 3) xhr.abort();
-      }, xhr.timeout);
+      if (xhr.timeout) {
+        setTimeout(function () {
+          if (true || xhr.readyState == 3) xhr.abort();
+        }, xhr.timeout);
+      }
 
       eventsource._xhr = xhr;
 
